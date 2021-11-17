@@ -1,9 +1,26 @@
 import * as React from "react"
 import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
+import { StaticQuery, graphql } from 'gatsby';
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+
+const query = graphql`
+  query {
+    allStrapiArticles {
+      edges {
+        node {
+          id
+          title
+          author {
+            name
+          }
+        }
+      }
+    }
+  }
+`
 
 const IndexPage = () => (
   <Layout>
@@ -11,6 +28,16 @@ const IndexPage = () => (
     <h1>Hi people</h1>
     <p>Welcome to your new Gatsby site.</p>
     <p>Now go build something great.</p>
+    <StaticQuery
+    query={query}
+    render={data => (
+      <ul>
+        {data.allStrapiArticles.edges.map(article => (
+          <li key={article.node.strapiId}>{article.node.title} by {article.node.author.name}</li>
+        ))}
+      </ul>
+    )}
+  />
     <StaticImage
       src="../images/gatsby-astronaut.png"
       width={300}
